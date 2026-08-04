@@ -41,7 +41,10 @@ import numpy as np
 df = pd.read_csv("dirty_cafe_sales (1).csv")
 ```
 
-📸 **Screenshot:** Dataset preview (`df.head()`)
+## Dataset Preview
+
+
+![Dataset Preview](Images/preview.png)
 
 ---
 
@@ -60,9 +63,18 @@ This helped identify:
 - Incorrect data types
 - Columns requiring cleaning
 
-📸 **Screenshot:** `df.info()`
+## Data Inspection
 
-📸 **Screenshot:** Missing value percentages
+Inspecting the dataset structure using `df.info()`.
+
+![Dataset Information](Images/info.png)
+
+
+## Missing Values
+
+Percentage of missing values before cleaning.
+
+![Missing Values](Images/missing%25.png)
 
 ---
 
@@ -154,7 +166,6 @@ Several numeric columns contained the string:
 ```
 ERROR
 ```
-
 These were replaced with **0** before converting to numeric values.
 
 ```python
@@ -205,7 +216,10 @@ using `numpy.where()`.
 
 This preserved as many records as possible instead of deleting them.
 
-📸 **Screenshot:** Code cell calculating missing values
+
+Missing numeric values were calculated using existing transaction information.
+
+![Recovering Values](Images/calculations.png)
 
 ---
 
@@ -269,6 +283,11 @@ df["Transaction_Date"] = (
 # Final Dataset
 
 After cleaning, the dataset contained:
+## Final Dataset
+
+Preview of the cleaned dataset after all cleaning operations.
+
+![Final Dataset](Images/finnal.png)
 
 - Standardized text values
 - Correct column names
