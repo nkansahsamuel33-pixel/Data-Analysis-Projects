@@ -1,104 +1,316 @@
-# ☕ Dirty Café Sales Data Cleaning Project
+# ☕ Coffee Sales Data Cleaning with Pandas
 
-## 📌 Project Overview
-This project focuses on cleaning and preprocessing a raw, unstructured dataset containing 10,000 transaction records from a café (`dirty_cafe_sales.csv`)[cite: 1]. The dataset contained various data quality issues, including improper column headers, missing values (`NaN`), system noise (`ERROR`, `UNKNOWN`), inconsistent casing, and incorrect data types[cite: 1]. 
+A complete data cleaning project using **Python, Pandas, and NumPy** to prepare a messy coffee sales dataset for analysis.
 
-Using **Python** and **Pandas**, this notebook systematically cleans the dataset, imputes missing financial figures using mathematical calculations, standardizes categorical text, and exports a clean dataset ready for downstream analysis[cite: 1].
-
----
-
-## 🛠️ Tools & Libraries Used
-* **Python**
-* **Pandas** for data manipulation and cleaning
-* **NumPy** for conditional calculations (`np.where`)
+The objective of this project was to identify and resolve data quality issues such as missing values, inconsistent formatting, invalid entries, incorrect data types, and incomplete transactions.
 
 ---
 
-## 🚀 Data Cleaning Steps
+## 📊 Project Overview
 
-### 1. Initial Exploration & Column Standardization
-* Imported raw transaction data and examined structure using `df.info()` and missing value percentages (`df.isna().mean()`).
-* Replaced spaces in column names with underscores to streamline variable referencing.
+Real-world datasets are rarely clean. This dataset contained:
 
+- Missing values
+- Inconsistent text formatting
+- Invalid values (`ERROR`)
+- Incorrect data types
+- Missing transaction information
+- Missing numerical values that could be calculated from existing data
+
+The dataset was cleaned step-by-step to make it suitable for further analysis and visualization.
+
+---
+
+## 🛠 Technologies Used
+
+- Python
+- Pandas
+- NumPy
+- Jupyter Notebook
+
+---
+
+# Dataset Loading
+
+The dataset was imported using Pandas.
+
+```python
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv('dirty_cafe_sales (1).csv')
-df.columns = df.columns.str.replace(' ', '_')
+df = pd.read_csv("dirty_cafe_sales (1).csv")
+```
 
-> 📸 [INSERT SCREENSHOT HERE: Notebook Output of `df.info()` or initial dataset state]
-
----
-
-### 2. Standardizing the `Item` Column
-* Cleared leading/trailing whitespace and normalized text capitalization using `.str.title().
-* Replaced explicit string values like `'Error'` and missing `NaN` values with `'Unknown'`.
-
-df['Item'] = df['Item'].str.strip().str.title().fillna('Unknown').replace('Error', 'Unknown')
+📸 **Screenshot:** Dataset preview (`df.head()`)
 
 ---
 
-### 3. Handling Unrecoverable Missing Records
-* Evaluated numeric relationship across `Quantity`, `Price_Per_Unit`, and `Total_Spent`.
-* Dropped records where **both** key fields needed for mathematical calculation (e.g., `Quantity` and `Price_Per_Unit`, or `Quantity` and `Total_Spent`) were completely missing, as these values could not be accurately imputed[cite: 1].
+# Data Inspection
 
-# Drop rows missing both key metrics
-df = df.dropna(subset=['Quantity', 'Price_Per_Unit'], how='all')
+Before cleaning, the dataset structure and missing values were examined.
 
-df = df.dropna(subset=['Quantity', 'Total_Spent'], how='all')
+```python
+df.info()
+df.isna().mean()*100
+```
 
----
+This helped identify:
 
-### 4. Numeric Type Conversion & Mathematical Imputation
-* Replaced string noise (`'ERROR'`) and missing values (`NaN`) in numeric columns with `0` temporarily to allow type casting[cite: 1].
-* Converted `Quantity`, `Price_Per_Unit`, and `Total_Spent` to numeric data types using `pd.to_numeric()`[cite: 1].
-* Used NumPy conditional statements (`np.where`) to mathematically calculate missing values across related financial metrics[cite: 1]:
-  - Quantity = Total Spent / Price Per Unit
-    
-  - Price Per Unit = Total Spent / Quantity
-    
-  - Total Spent = Quantity * Price Per Unit
+- Missing values
+- Incorrect data types
+- Columns requiring cleaning
 
-# Cast columns to numeric
-df['Quantity'] = pd.to_numeric(df['Quantity'].replace('ERROR', 0).fillna(0), errors='coerce')
+📸 **Screenshot:** `df.info()`
 
-df['Price_Per_Unit'] = pd.to_numeric(df['Price_Per_Unit'].replace('ERROR', 0).fillna(0), errors='coerce')
-
-df['Total_Spent'] = pd.to_numeric(df['Total_Spent'].replace('ERROR', 0).fillna(0), errors='coerce')
-
-# Recalculate missing figures mathematically
-df['Quantity'] = np.where(df['Quantity'] == 0.0, df['Total_Spent'] / df['Price_Per_Unit'], df['Quantity'])
-
-df['Price_Per_Unit'] = np.where(df['Price_Per_Unit'] == 0.0, df['Total_Spent'] / df['Quantity'], df['Price_Per_Unit'])
-
-df['Total_Spent'] = np.where(df['Total_Spent'] == 0.0, df['Quantity'] * df['Price_Per_Unit'], df['Total_Spent'])
-
-> 📸 [INSERT SCREENSHOT HERE: Code block showing numeric calculations or updated dataframe]
+📸 **Screenshot:** Missing value percentages
 
 ---
 
-### 5. Cleaning Categorical & Date Columns
-* **`Payment_Method` & `Location`**: Stripped excess spaces, standardized casing to Title Case, and replaced `'ERROR'` or missing values (`NaN`) with `'Unknown'`[cite: 1].
-* **`Transaction_Date`**: Standardized invalid strings (`'ERROR'`) and missing dates with `'Unknown'`[cite: 1].
+# Cleaning Column Names
 
-# Clean Payment Method
-df['Payment_Method'] = df['Payment_Method'].str.title().str.replace('ERROR', 'Unknown').fillna('Unknown').str.strip()
+Column names contained spaces, which were replaced with underscores.
 
-# Clean Location
-df['Location'] = df['Location'].str.title().str.replace('ERROR', 'Unknown').fillna('Unknown').str.strip()
+```python
+df.columns = df.columns.str.replace(" ", "_")
+```
 
-# Clean Transaction Date
-df['Transaction_Date'] = df['Transaction_Date'].fillna('Unknown').str.replace('ERROR', 'Unknown')
+### Before
+
+```
+Price Per Unit
+```
+
+### After
+
+```
+Price_Per_Unit
+```
 
 ---
 
-## 📊 Final Dataset Preview
+# Cleaning the Item Column
 
-After completing the pipeline, the dataset was inspected to verify clean data types, complete numerical fields, and consistent categorical formatting[cite: 1].
+The **Item** column contained:
 
-df.head(20)
+- Missing values
+- Extra spaces
+- Inconsistent capitalization
+- "ERROR" values
 
-> 📸 [INSERT SCREENSHOT HERE: Output of `df.head(20)` showing clean columns and data]
+The cleaning process:
+
+```python
+df["Item"] = (
+    df["Item"]
+    .str.strip()
+    .str.title()
+    .fillna("Unknown")
+    .replace("Error", "Unknown")
+)
+```
+
+This ensured all product names were standardized.
+
+📸 **Screenshot:** Before and after cleaning
+
+---
+
+# Removing Invalid Records
+
+Some transactions had both:
+
+- Quantity missing
+- Price per unit missing
+
+These records could not be recovered and were removed.
+
+```python
+df = df.dropna(
+    subset=["Quantity","Price_Per_Unit"],
+    how="all"
+)
+```
+
+Likewise, records missing both:
+
+- Quantity
+- Total Spent
+
+were also removed.
+
+```python
+df = df.dropna(
+    subset=["Quantity","Total_Spent"],
+    how="all"
+)
+```
+
+---
+
+# Handling ERROR Values
+
+Several numeric columns contained the string:
+
+```
+ERROR
+```
+
+These were replaced with **0** before converting to numeric values.
+
+```python
+df["Quantity"] = df["Quantity"].replace("ERROR",0).fillna(0)
+
+df["Price_Per_Unit"] = df["Price_Per_Unit"].replace("ERROR",0).fillna(0)
+
+df["Total_Spent"] = df["Total_Spent"].replace("ERROR",0).fillna(0)
+```
+
+---
+
+# Converting Data Types
+
+The numeric columns were converted from strings to numeric values.
+
+```python
+df["Quantity"] = pd.to_numeric(df["Quantity"], errors="coerce")
+
+df["Price_Per_Unit"] = pd.to_numeric(df["Price_Per_Unit"], errors="coerce")
+
+df["Total_Spent"] = pd.to_numeric(df["Total_Spent"], errors="coerce")
+```
+
+Using `errors="coerce"` converts invalid values into `NaN` instead of causing an error.
+
+---
+
+# Recovering Missing Numeric Values
+
+Rather than leaving missing values empty, they were calculated using:
+
+```
+Total Spent = Quantity × Price Per Unit
+```
+
+The notebook recovered missing values with:
+
+```python
+Quantity = Total Spent / Price Per Unit
+
+Price Per Unit = Total Spent / Quantity
+
+Total Spent = Quantity × Price Per Unit
+```
+
+using `numpy.where()`.
+
+This preserved as many records as possible instead of deleting them.
+
+📸 **Screenshot:** Code cell calculating missing values
+
+---
+
+# Cleaning Payment Method
+
+The Payment Method column contained:
+
+- ERROR
+- Missing values
+- Inconsistent capitalization
+- Leading/trailing spaces
+
+Cleaning performed:
+
+```python
+df["Payment_Method"] = (
+    df["Payment_Method"]
+    .str.title()
+    .str.replace("ERROR","Unknown")
+    .fillna("Unknown")
+    .str.strip()
+)
+```
+
+---
+
+# Cleaning Location
+
+The Location column contained similar issues.
+
+```python
+df["Location"] = (
+    df["Location"]
+    .str.title()
+    .str.replace("ERROR","Unknown")
+    .fillna("Unknown")
+    .str.strip()
+)
+```
+
+---
+
+# Cleaning Transaction Dates
+
+Missing transaction dates and invalid values were replaced with:
+
+```
+Unknown
+```
+
+```python
+df["Transaction_Date"] = (
+    df["Transaction_Date"]
+    .fillna("Unknown")
+    .str.replace("ERROR","Unknown")
+)
+```
+
+---
+
+# Final Dataset
+
+After cleaning, the dataset contained:
+
+- Standardized text values
+- Correct column names
+- Numeric data types
+- Reduced missing values
+- Consistent categorical values
+- Recovered numerical information
+- Invalid records removed
+
+The cleaned dataset was then ready for:
+
+- Exploratory Data Analysis (EDA)
+- Visualization
+- Dashboard creation
+
+
+---
+
+# Skills Demonstrated
+
+- Data Cleaning
+- Missing Value Treatment
+- Feature Standardization
+- String Manipulation
+- Data Type Conversion
+- Conditional Data Recovery
+- Pandas
+- NumPy
+- Data Validation
+
+---
+
+
+```
+
+---
+
+## 👤 Author
+
+**Samuel Nkansah**
+
+Data Analyst | Python | SQL | Power BI | Excel
 
 ---
 
