@@ -123,7 +123,11 @@ df["Item"] = (
 
 This ensured all product names were standardized.
 
-📸 **Screenshot:** Before and after cleaning
+## Handling Missing and Invalid Values
+
+Missing values and `ERROR` entries were standardized before converting columns to their appropriate data types.
+
+![Replacing ERROR Values](Images/Errorhandling.png)
 
 ---
 
