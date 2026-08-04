@@ -11,13 +11,6 @@ Customer churn is one of the most important business metrics in the telecommunic
 The objective of this project is to develop predictive models that identify customers who are likely to discontinue their services. These predictions enable businesses to implement targeted retention strategies, reduce customer loss, and improve long-term revenue.
 
 > **Business Goal:** Predict customer churn and identify high-risk customers before they leave.
-
-<p align="center">
-<img src="Images/churn-distribution.png" width="800">
-</p>
-
-*Replace the image above with your churn distribution chart or dashboard screenshot.*
-
 ---
 
 # 🛠️ Technologies Used
@@ -61,11 +54,7 @@ The project uses the **Telco Customer Churn** dataset containing information on 
 - Monthly Charges
 - Total Charges
 
-<p align="center">
-<img src="Images/dataset-preview.png" width="900">
-</p>
-
-*Dataset preview.*
+![Dataset Preview](Load_data.png)
 
 ---
 
@@ -88,6 +77,8 @@ The dataset was split into:
 
 using **stratified sampling** to preserve the class distribution.
 
+![Train Test](train_test.png)
+
 ### Feature Engineering
 
 A `ColumnTransformer` pipeline was used to preprocess the data.
@@ -108,11 +99,7 @@ Encoded using:
 
 This converts categorical variables into numerical representations while avoiding multicollinearity.
 
-<p align="center">
-<img src="Images/preprocessing.png" width="900">
-</p>
-
-*Replace with a screenshot of your preprocessing pipeline or encoded dataset.*
+![Encoding](encoding.png)
 
 ---
 
@@ -128,6 +115,11 @@ Three classification algorithms were trained and evaluated.
 | Precision | **50%** |
 | Recall | **80%** |
 | F1 Score | **0.62** |
+
+
+![LR](LR.png)
+
+![LR report](lRreport.png)
 
 ### Observation
 
@@ -146,6 +138,7 @@ This makes it valuable when minimizing missed churn cases is the priority.
 | Recall | **46%** |
 | F1 Score | **0.53** |
 
+![RF](RF.png)
 ### Observation
 
 Random Forest improved overall accuracy and precision but identified fewer churned customers than Logistic Regression.
@@ -161,6 +154,8 @@ Random Forest improved overall accuracy and precision but identified fewer churn
 | Recall | **52%** |
 | F1 Score | **0.58** |
 
+![GB](GB.png)
+
 ### Observation
 
 Gradient Boosting delivered the best overall performance by achieving the highest accuracy and precision while maintaining a balanced recall.
@@ -175,12 +170,6 @@ Gradient Boosting delivered the best overall performance by achieving the highes
 | Random Forest | 78% | 62% | 46% | 0.53 |
 | Gradient Boosting | **80%** | **65%** | 52% | 0.58 |
 
-<p align="center">
-<img src="Images/model-comparison.png" width="900">
-</p>
-
-*Replace with confusion matrices, ROC curves, or comparison chart.*
-
 ---
 
 # 💡 Key Findings
@@ -192,74 +181,11 @@ Gradient Boosting delivered the best overall performance by achieving the highes
   - If overall predictive accuracy is more important, Gradient Boosting performs best.
 
 ---
-
-# 🚀 Getting Started
-
-## Clone the Repository
-
-```bash
-git clone https://github.com/yourusername/telco-customer-churn-prediction.git
-
-cd telco-customer-churn-prediction
-```
-
-## Install Dependencies
-
-```bash
-pip install pandas numpy scikit-learn openpyxl notebook
-```
-
-## Launch Jupyter Notebook
-
-```bash
-jupyter notebook
-```
-
-Open:
-
-```
-Telco_Customer_Churn_Prediction.ipynb
-```
-
-Run all cells to reproduce the results.
-
----
-
-# 📁 Repository Structure
-
-```
-Telco-Customer-Churn-Prediction/
-│
-├── Images/
-│   ├── churn-distribution.png
-│   ├── dataset-preview.png
-│   ├── preprocessing.png
-│   └── model-comparison.png
-│
-├── Telco_Customer_Churn_Prediction.ipynb
-├── Telco_customer_churnG3.xlsx
-├── README.md
-└── requirements.txt
-```
-
----
-
-# 📌 Future Improvements
-
-- Perform hyperparameter tuning using GridSearchCV
-- Address class imbalance using SMOTE
-- Build an XGBoost model
-- Deploy the model with Streamlit or Flask
-- Interpret predictions using SHAP values
-- Build an interactive Power BI dashboard
-
 ---
 
 # 👨‍💻 Author
 
 **Samuel Nkansah**
 
-Aspiring Data Analyst | Python | SQL | Power BI | Machine Learning
+Data Analyst | Python | SQL | Power BI | Machine Learning
 
-- LinkedIn: *(Add your LinkedIn URL)*
-- GitHub: *(Add your GitHub URL)*
