@@ -11,4 +11,4 @@ Customer churn is one of the most important business metrics in the telecommunic
 The objective of this project is to develop predictive models that identify customers who are likely to discontinue their services. These predictions enable businesses to implement targeted retention strategies, reduce customer loss, and improve long-term revenue.
 
 > **Business Goal:** Predict customer churn and identify high-risk customers before they leave.
-![Error Unknown](Images/missing-vues.png)
+![Error Unknown](error-unknown.png)
